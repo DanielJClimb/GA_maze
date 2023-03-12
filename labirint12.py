@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 11 10:20:36 2023
 
 @author: danio
 """
@@ -25,11 +24,30 @@ start = [1,1]
 exi = [10,10]
 
 
-# 0 - ruch w góre
-# 1 - ruch w prawo
-# 2 - ruch w dół
-# 3 ruch w lewo
+# 0 - up
+# 1 - right
+# 2 - down
+# 3 -left
+
 def movement(x, l):
+    '''
+    Function update location, based on number indicating next move.
+    Then, if new location is in walls, function chnages location back to
+    previous one, in which we were before hit.
+    
+    
+    Parameters
+    ----------
+    x : int
+        Number from set [0,1,2,3] indicating direction of next move
+    l : list
+        List that contains current location
+
+    Returns
+    -------
+    l : list
+        Function returns list with location after move
+    '''
     if x == 0:
         l[1] -= 1
         if l in walls:
@@ -49,6 +67,21 @@ def movement(x, l):
     return l
 
 def penalty(s):
+    '''
+    Function measures the penalty for wasting moves byb heading back to the 
+    location, from which we have just move.
+
+    Parameters
+    ----------
+    s : numpy.array
+        Array, which contains directions of every move
+
+    Returns
+    -------
+    k : int
+        Penalty for wasting moves.
+
+    '''
     k = 0
     for i in range(1, len(s)):
         if abs(s[i] - s[i-1]) == 2:
@@ -57,6 +90,23 @@ def penalty(s):
     
     
 def fitness(solution, solution_idx):
+    '''
+    Function measures fintess of our solution, by calculating how far
+    are we from exit in current location.
+    
+    Parameters
+    ----------
+    solution : numpy.array
+        Array with directions of each move
+    solution_idx : index
+        Index of numpy.array
+
+    Returns
+    -------
+    int
+        Fitness of our solution
+
+    '''
     location = [1,1]
     for i in solution:
         if penalty(solution) > 0:
@@ -70,35 +120,36 @@ def fitness(solution, solution_idx):
  
 fitness_function = fitness
 
-#ile chromsomów w populacji
-#ile genow ma chromosom          
+#chromosoms in population
+#number of genes in each chromosom        
 sol_per_pop = 150
 num_genes = 30
 
-#ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
-#ile pokolen
-#ilu rodzicow zachowac (kilka procent)
+#how many parents we choose for mating
+#how many generations 
+#percentage of parents to keep
 num_parents_mating = 75
 num_generations = 300
 keep_parents = 3
 
-#jaki typ selekcji rodzicow?
+#type of parents selection
 #sss = steady, rws=roulette, rank = rankingowa, tournament = turniejowa
 parent_selection_type = "sss"
         
 
-#w il =u punktach robic krzyzowanie?
+#type of crossover
 crossover_type = "single_point"
 
-#mutacja ma dzialac na ilu procent genow?
-#trzeba pamietac ile genow ma chromosom
+#type of mutation
+#chance of mutation(%)
 mutation_type = "random"
 mutation_percent_genes = 5
 
+#we want ot stop, when we reach exit =  fitness equals 0
 stop_criteria = 'reach_0'
 
 
-#inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
+#icreating our algorithm
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -112,17 +163,29 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        mutation_percent_genes=mutation_percent_genes,
                        stop_criteria = stop_criteria)
 
-#uruchomienie algorytmu
+#runnig algorithm
 ga_instance.run()
 
 
-# funkcja correction usuwa z naszego rozwiązania ruchy, w których
-# pozostalismy w miejscu(brak ruchu spowodowany jest chęcia wejscia w scianę).
-# Zostało to zrobione za pomocą funkcji, która od nowa przechodzi
-# sciezke, ponieważ funkcja ruchu jest tak zdefiniowana, ze uzycie jej
-# w petli po kazdym ruchu rozwiazania sprawialo, ze tablica wypelniala się
-# w calosci lokalizacja ostatniego ruchu
 def correction(s):
+    '''
+    Function take our solution and clean it from movements in which we 
+    stayed in place(our next movement would be hitting the wall). 
+    Every move is checked. If it would be hitting the wall, p list
+    is appended with False, else it is appended with True. At the end p is 
+    used to obtain clean solution.
+
+    Parameters
+    ----------
+    s : numpy.array
+        array, which includes set of moves
+
+    Returns
+    -------
+    numpy.array
+        Array containg cleaned path
+
+    '''
     l = [1,1]
     p = []
     for x in s:
@@ -157,17 +220,17 @@ def correction(s):
     return s[p]
 
 
-#podsumowanie: najlepsze znalezione rozwiazanie (chromosom+ocena)
+#Summary: best solution(chromosom + fitness)
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
 solution = correction(solution)
 print("Parameters of the best solution : {solution}".format(solution=solution))
 print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 print("Exit found in {steps} steps".format(steps=len(solution)))
-#wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
+#plot, which show, how our fitness was changing
 ga_instance.plot_fitness()
 
 location = [1,1]
-print('Lokalizacje po ruchach')
+print('Location after each move')
 for i in solution:
     movement(i, location)
     print(location)
