@@ -48,7 +48,7 @@ def movement(x, l):
 
     Returns
     -------
-    l : list
+    t : list
         Function returns list with location after move
     '''
     t = l
@@ -153,7 +153,7 @@ mutation_percent_genes = 5
 stop_criteria = 'reach_0'
 
 
-#icreating our algorithm
+#creating our algorithm
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -238,6 +238,7 @@ print("Exit found in {steps} steps".format(steps=len(solution)))
 #plot, which show, how our fitness was changing
 ga_instance.plot_fitness()
 
+# creating list with location after each move
 location = [1,1]
 moves = [[1,1]]
 print('Location after each move')
@@ -247,7 +248,7 @@ for i in solution:
     moves.append(t)
     print(location)
 
-
+# creating lists for scatter plot of maze
 place_x =[]
 for i in range(12):
     place_x.extend(list(np.arange(0,12)))
@@ -255,8 +256,10 @@ place_y =[]
 for i in range(12):
     for j in range(12):
         place_y.append(i)
+# create list with locations of walls
 x = [x[0] for x in walls]
 y = [y[1] for y in walls]
+# creating list with locations of our path
 path_x =[x[0] for x in moves]
 path_y = [y[1] for y in moves]
 
@@ -267,11 +270,11 @@ ax.scatter(1,1, color = 'black')
 ax.scatter(10,10, color='orange')
 plt.plot(path_x, path_y, color='green')
 plt.show()
-# kolor niebieski sciany
-# kolor czerwony pola
-# kolor zielony droga
-# kolor czarny start
-# kolor pomarańczowy koniec
+# blue - walls
+# red - places on which we can walk
+# green - path
+# black - start
+# orange - end
 
 
 mean_time = []
