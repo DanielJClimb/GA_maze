@@ -1,2 +1,4 @@
-# GA_maze
-Aim of this project is to find exit from the maze in 30 moves. To solve this problem, I used Genetic Algorithm with help of python package Pygad. At the beginnig, I declare list with location of walls. Next, I create two variables containg location of start and exit. After that, I set all necessary hiperparameters for genetic algorithm. Rest is done by Pygad.
+# Genetic algorithms
+This repository contains two folders: maze and metal_alloys.
+Maze conatins scirpt , which uses python package Pygad to find exit from maze. Scipt is given locations of wall, start and exit.
+Metal_alloys contains scirpt, which is used to find proportions of six metals to create alloys with highest endurance.
