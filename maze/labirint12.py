@@ -10,21 +10,21 @@ import matplotlib.pyplot as plt
 
 gene_space=[0, 1, 2, 3]
 
-walls = [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],
-         [0,1],                  [4,1],                  [8,1],              [11,1],
-         [0,2],[1,2],[2,2],                  [6,2],      [8,2],[9,2],       [11,2],
-         [0,3],                  [4,3],      [6,3],                         [11,3],
-         [0,4],      [2,4],      [4,4],[5,4],            [8,4],[9,4],       [11,4],
-         [0,5],            [3,5],[4,5],                  [8,5],             [11,5],
-         [0,6],                              [6,6],                  [10,6],[11,6],
-         [0,7],      [2,7],            [5,7],[6,7],      [8,7],             [11,7],
-         [0,8],      [2,8],[3,8],[4,8],                  [8,8],[9,8],       [11,8],
-         [0,9],      [2,9],      [4,9],[5,9],       [7,9],     [9,9],       [11,9],
-        [0,10],      [2,10],                                                [11,10],
-       [0,11],[1,11],[2,11],[3,11],[4,11],[5,11],[6,11],[7,11],[8,11],[9,11],[10,11],[11,11]]
+walls = [[0,11],[1,11],[2,11],[3,11],[4,11],[5,11],[6,11],[7,11],[8,11],[9,11],[10,11],[11,11],
+         [0,10],                 [4,10],                 [8,10],            [11,10],
+         [0,9],[1,9],[2,9],                  [6,9],      [8,9],[9,9],       [11,9],
+         [0,8],                  [4,8],      [6,8],                         [11,8],
+         [0,7],      [2,7],      [4,7],[5,7],            [8,7],[9,7],       [11,7],
+         [0,6],            [3,6],[4,6],                  [8,6],             [11,6],
+         [0,5],                              [6,5],                  [10,5],[11,5],
+         [0,4],      [2,4],            [5,4],[6,4],      [8,4],             [11,4],
+         [0,3],      [2,3],[3,3],[4,3],                  [8,3],[9,3],       [11,3],
+         [0,2],      [2,2],      [4,2],[5,2],       [7,2],     [9,2],       [11,2],
+         [0,1],      [2,1],                                                 [11,1],
+         [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0]]
 
-start = [1,1]
-exi = [10,10]
+start = [1,10]
+exi = [10,1]
 
 
 # 0 - up
@@ -111,7 +111,7 @@ def fitness(solution, solution_idx):
         Fitness of our solution
 
     '''
-    location = [1,1]
+    location = [1,10]
     for i in solution:
         if penalty(solution) > 0:
             kara = penalty(solution)
@@ -195,7 +195,7 @@ def correction(s):
         Array containg cleaned path
 
     '''
-    l = [1,1]
+    l = [1,10]
     p = []
     for x in s:
         if x == 0:
@@ -239,8 +239,8 @@ print("Exit found in {steps} steps".format(steps=len(solution)))
 ga_instance.plot_fitness()
 
 # creating list with location after each move
-location = [1,1]
-moves = [[1,1]]
+location = [1,10]
+moves = [[1,10]]
 print('Location after each move')
 for i in solution:
     location = movement(i, location)
@@ -263,18 +263,18 @@ y = [y[1] for y in walls]
 path_x =[x[0] for x in moves]
 path_y = [y[1] for y in moves]
 
-fig, ax = plt.subplots()
-ax.scatter(place_x, place_y, color='red')
-ax.scatter(x,y, color='blue')
-ax.scatter(1,1, color = 'black')
-ax.scatter(10,10, color='orange')
-plt.plot(path_x, path_y, color='green')
+fig, ax = plt.subplots(figsize=(10,10))
+ax.scatter(place_x, place_y, color='grey', marker='s', s = 2200)
+ax.scatter(x,y, color='black', marker='s', s = 2200)
+ax.scatter(1,10, color = 'red', marker='s', s = 2200)
+ax.scatter(10,1, color='blue', marker='s', s = 2200)
+plt.plot(path_x, path_y, color='green', linewidth = 7)
 plt.show()
-# blue - walls
-# red - places on which we can walk
+# black - walls
+# grey - places on which we can walk
 # green - path
-# black - start
-# orange - end
+# red - start
+# blue - end
 
 
 mean_time = []
