@@ -4,6 +4,9 @@
 @author: danio
 """
 import pygad
+import numpy as np
+import time
+import matplotlib.pyplot as plt
 
 gene_space=[0, 1, 2, 3]
 
@@ -48,6 +51,7 @@ def movement(x, l):
     l : list
         Function returns list with location after move
     '''
+    t = l
     if x == 0:
         l[1] -= 1
         if l in walls:
@@ -64,7 +68,7 @@ def movement(x, l):
         l[0] -= 1
         if l in walls:
             l[0] +=1
-    return l
+    return t
 
 def penalty(s):
     '''
@@ -114,7 +118,7 @@ def fitness(solution, solution_idx):
             fitnes = abs(location[1] - exi[1]) + abs(location[0] - exi[0]) + kara
             break
         else:
-            movement(i, location)
+            location = movement(i, location)
             fitnes = abs(location[1] - exi[1]) + abs(location[0] - exi[0])
     return -fitnes
  
@@ -165,6 +169,11 @@ ga_instance = pygad.GA(gene_space=gene_space,
 
 #runnig algorithm
 ga_instance.run()
+
+
+# kolor scian niebieski
+# kolor pol czerwony
+# zielona linia sciezka
 
 
 def correction(s):
@@ -230,7 +239,48 @@ print("Exit found in {steps} steps".format(steps=len(solution)))
 ga_instance.plot_fitness()
 
 location = [1,1]
+moves = [[1,1]]
 print('Location after each move')
 for i in solution:
-    movement(i, location)
+    location = movement(i, location)
+    t = location.copy()
+    moves.append(t)
     print(location)
+
+
+place_x =[]
+for i in range(12):
+    place_x.extend(list(np.arange(0,12)))
+place_y =[]
+for i in range(12):
+    for j in range(12):
+        place_y.append(i)
+x = [x[0] for x in walls]
+y = [y[1] for y in walls]
+path_x =[x[0] for x in moves]
+path_y = [y[1] for y in moves]
+
+fig, ax = plt.subplots()
+ax.scatter(place_x, place_y, color='red')
+ax.scatter(x,y, color='blue')
+ax.scatter(1,1, color = 'black')
+ax.scatter(10,10, color='orange')
+plt.plot(path_x, path_y, color='green')
+plt.show()
+# kolor niebieski sciany
+# kolor czerwony pola
+# kolor zielony droga
+# kolor czarny start
+# kolor pomarańczowy koniec
+
+
+mean_time = []
+for i in range(10):
+    start = time.time()
+    ga_instance.run()
+    end = time.time()
+    mean_time.append(end -start)
+
+mean_time = np.array(mean_time)
+mean = np.mean(mean_time)
+print('Mean time: {mean}'.format(mean = mean))
